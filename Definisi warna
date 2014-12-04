@@ -1,0 +1,25 @@
+/*
+Definisi warna
+0 = Black
+1 = Blue
+2 = Green
+3 = Aqua
+4 = Red
+5 = Purple
+6 = Yellow
+7 = White
+
+Misal aku mau buat desain:
+
+ABCDE
+FGHIJ
+KLMNO
+
+kalau mau tulisannya kukasih warna, kasih definisi warnanya juga. Buat satu kotak lagi yang isinya warna tiap karakter, berurutan:
+
+14256
+31425
+73142
+
+kira2 hasilnya apa?
+*/
