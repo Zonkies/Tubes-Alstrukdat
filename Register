@@ -1,0 +1,79 @@
+strcpy (namafile, "daftarpemain.txt");
+if (IsFileExist(namafile))
+{
+	CLOSE();
+}
+else 
+{
+	STARTSAVE(namafile);
+	ENDSAVENULL();
+	// fprint(pita,".");
+	// fclose (pita);
+}
+
+
+do
+{
+	CreateList(&L);
+	STARTKATA(namafile);
+	while (!EndKata)
+	{
+		for (i = 0; i < CKata.Lenght; i++)
+		{
+			nama.c[i] = CKata.TabKata[i];
+		}
+		P = Alokasi(nama);
+		InsertLast(&L, P);
+		memset(nama.c, 0, sizeof nama.c);
+		ADVKATA();
+	}
+
+	print("NAMA : ");
+	scanf("%s", &tempNama);
+
+	while (strlen (tempNama) < 3)
+	{
+		print("Nama kurang panjang, silahkan ulangi!\n");
+		print("NAMA : ");;
+		scanf("%s", &tempNama);
+	}
+
+	PS = Search(L,tempNama); //addres sementara
+
+	if (PS == Nil)
+	{
+		strcpy(nama.c, tempNama);
+		P = Alokasi(nama);
+		InsertLast(&L,P);
+		STARTSAVE(namafile);
+
+		if (IsListEmpty(L))
+		{
+			ENDSAVESTATE(InfoNama(P));
+			printf("Pendaftaran Gagal. Huu :(\n");
+		}
+		else
+		{
+			P = First(L);
+			
+			while (Next(P) != Nil)
+			{
+				SAVESTATE(InfoNama(P));
+				P = Next(P);
+			}
+
+			ENDSAVESTATE(InfoNama(P));
+			printf("Pendaftaran %s berhasil.\n",  tempNama);
+		}
+	}
+	else
+	{
+		print("Nama sudah terdaftar");
+	}
+
+	printf("Mendaftar lagi? (Y/N)\n");
+
+
+
+	}
+} while 
