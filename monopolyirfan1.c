@@ -215,7 +215,7 @@ int main()
             }
 
             /* *** KONDISI SAAT PEMAIN MAJU *** */
-            for(i=1;i<=(7/*V_SumDadu*/);i++)//T_Pemain maju sebanyak tdadu, tetapi satu2 agar user experience lebih terasa
+            for(i=1;i<=(V_SumDadu);i++)//T_Pemain maju sebanyak tdadu, tetapi satu2 agar user experience lebih terasa
             {
                 P_Delay(250);
                 P_MajuSelangkah(&(V_TabPemain.T[V_GiliranX]), V_GiliranX);//maju satu langkah
