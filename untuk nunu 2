@@ -1,0 +1,253 @@
+#include <stdio.h>
+#include <string.h>
+#include "boolean.h"
+#include <stdlib.h>
+
+#define Nmax 100
+#define MaxFileName 50
+#define MaxName 10
+
+/* KAMUS GLOBAL */
+FILE *Filenya;
+typedef char Nama[MaxName];
+typedef struct{
+	Nama T;
+} infotype;
+
+#include "boolean.h"
+#define Nil NULL
+
+typedef struct to *address;
+typedef struct to{
+	infotype Info;
+	address Next;
+} ElmtList;
+typedef struct{
+	address First;
+} List;
+
+/* Selektor */
+#define Info(P) (P)->Info
+#define Next(P) (P)->Next
+#define First(L) ((L).First)
+
+boolean IsListEmpty(List L);
+void CreateList(List *L);
+address Alokasi(infotype X);
+void Dealokasi(address *P);
+address Search(List L, infotype X);
+boolean FSearch(List L, address P);
+void InsertLast(List *L, address P);
+void PrintInfo(List L);
+boolean IsListEmpty(List L){
+	return(First(L) == Nil);
+}
+void CreateList(List *L){
+	First(*L) = Nil;
+}
+address Alokasi(infotype X){
+	/* KAMUS LOKAL */
+	ElmtList *e;
+	/* ALGORITMA */
+	e = malloc(sizeof(*e));
+	if(e != Nil){
+		Info(e) = X;
+		Next(e) = Nil;
+		return(e);
+	}
+	else
+		return(Nil);
+}
+void Dealokasi(address *P){
+	free(*P);
+}
+address Search(List L, infotype X){
+	/* KAMUS LOKAL */
+	address P;
+	boolean found;
+	/* ALGORITMA */
+	P = First(L);
+	found = false;
+	while((P != Nil)&&(!found)){
+		if(strcmp(Info(P).T,X.T)==0){
+			found = true;
+		}
+		else{
+			P = Next(P);
+		}
+	}
+	if(found){
+		return(P);
+	}
+	else{
+		return(Nil);
+	}
+}
+
+boolean FSearch(List L, address P){
+	/* KAMUS LOKAL */
+	address Q;
+	boolean found;
+	/* ALGORITMA */
+	Q = First(L);
+	found = false;
+	while((Q != Nil)&&(!(found))){
+		if(P == Q)
+			found = true;
+		else
+			Q = Next(Q);
+	}
+	return(found);
+}
+void InsertFirst(List *L, address P){
+	Next(P) = First(*L);
+	First(*L) = P;
+}
+void InsertLast(List *L, address P){
+	/* KAMUS LOKAL */
+	address Last;
+	/* ALGORITMA */
+	if(IsListEmpty(*L))
+		InsertFirst(L,P);
+	else{
+		Last = First(*L);
+		while(Next(Last) != Nil)
+			Last = Next(Last);
+		Next(P) = Nil;
+		Next(Last) = P;
+	}
+}
+void PrintInfo(List L){
+	/* KAMUS LOKAL */
+	address P;
+	/* ALGORITMA */
+	if(IsListEmpty(L)){
+		printf("List kosong\n");
+	}
+	else{
+		P = First(L);
+		while(Next(P) != Nil){
+			printf("%d ",Info(P));
+			P = Next(P);
+		}
+		printf("%d\n",Info(P));
+	}
+}
+void FLoad(List *L, char FileName[MaxFileName]){
+	int i = 0;
+	infotype Infot;
+	Filenya = fopen(FileName,"r");
+	if (Filenya == NULL){
+		fprintf(stderr, "File '%s' tidak ditemukan!\nMembuat file baru dengan nama '%s'\n",FileName,FileName);
+	}
+	else{
+		while (fscanf(Filenya, "%s", &Infot.T) == 1){
+			InsertLast(L,Alokasi(Infot));
+		}
+		printf("Load berhasil!\n");
+	}
+	fclose(Filenya);
+}
+void FSave(List L,char FileName[MaxFileName]){
+	int i;
+	address P = First(L);
+	Filenya = fopen(FileName,"w");
+	while(P!=Nil){
+		fprintf(Filenya, "%s\n", Info(P).T);
+		P = Next(P);
+	}
+	fclose(Filenya);
+}
+
+int main(){
+	/* KAMUS */
+	int i,j,menu; // i,j untuk looping; menu untuk transisi menu
+	infotype input; // input untuk menerima masukan nama pemain dari user
+	boolean found; // found untuk skema searching dengan boolean
+	char YT; // YT untuk menerima masukan 'Y' atau 'T' dari user
+	List List_Nama; // Tab_Nama untuk menyimpan nama-nama pemain yang terdaftar
+	address P;
+	char FileName[MaxFileName]; // FileName untuk menyimpan nama file yang ingin dibuka/disimpan
+	/* ALGORITMA */
+	CreateList(&List_Nama);
+    printf("** Save/Load File Eksternal **\n");
+	printf("Masukkan nama file : "); scanf("%s",&FileName);
+	FLoad(&List_Nama,FileName); // Buka filenya
+	do{
+		printf("\nMENU UTAMA\n");
+		printf("1. Register\n");
+		printf("2. Login\n");
+		printf("3. Keluar\n");
+		printf("Pilih : ");scanf("%d",&menu);
+		switch(menu){
+			case 1:{
+				printf("--Register--\n");
+				do{
+					/* Input nama sampai benar */
+					do{
+						printf("Nama : ");scanf("%s",&input.T);
+						if(strlen(input.T) < 3){
+							printf("Masukan nama minimal 3 karakter\n");
+						}
+					}while(strlen(input.T) < 3);
+					/* Cek apakah nama sudah terdaftar atau belum */
+					
+					if(Search(List_Nama,input)!=Nil){
+						printf("Pendaftaran gagal. %s telah terdaftar.\n",input.T);
+					}
+					else{
+						/* Menyimpan kedalam list */
+						InsertLast(&List_Nama,Alokasi(input));
+						printf("Pendaftaran Berhasil. %s terdaftar.\n",input.T);
+					}
+					/* Input YT sampai benar */
+					do{
+						printf("Ingin mendaftar lagi (Y/T) : ");scanf(" %c",&YT);
+					}while((YT != 'Y')&&(YT != 'T'));
+				}while(YT == 'Y');
+				break;
+			}
+			case 2:{
+				if(First(List_Nama)==Nil){
+					printf("File kosong! Register terlebih dahulu!\n"); // Kasus kosong
+				}
+				else{
+					printf("--Login--\n");
+					printf("Nama : ");scanf("%s",&input);
+					/* Cek apakah nama sudah terdaftar atau belum */
+					if(Search(List_Nama,input)==Nil){
+						printf("Login Gagal. Nama tidak terdaftar. Silakan daftarkan terlebih dahulu\n");
+					}
+					else{
+						printf("Login berhasil.\n");
+						printf("Selamat datang %s\n",input.T);
+						printf("\nTeman bermain anda :\n");
+						P = First(List_Nama);
+						while(P != Nil){
+							if(strcmp(Info(P).T,input.T)!= 0)
+								printf("%s\n",Info(P).T);
+							P = Next(P);
+						}
+						do{
+							printf("\nSilakan Log out dengan memasukan karakter 'Y' : ");scanf(" %c",&YT);
+							/* Input YT sampai benar */
+							if(YT != 'Y'){
+								printf("Input Salah\n");
+							}
+						}while(YT != 'Y');
+					}
+				}
+				break;
+			}
+			case 3:{
+				printf("Selamat Tinggal!");
+				FSave(List_Nama,FileName); // Simpan filenya
+				break;
+			}
+			default:{
+				printf("Masukan menu tidak valid. Ulangi!\n");
+			}
+		}
+	}while(menu != 3);
+	return 0;
+}
