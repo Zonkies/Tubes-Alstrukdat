@@ -185,6 +185,8 @@ void FSave(List L,T_TabHighScore H){
 
 int main(){
 	/* KAMUS */
+	boolean ToPreparationMenu = false;
+	boolean ToGame = false;
 	int i,j,menu; // i,j untuk looping; menu untuk transisi menu
 	infotype input; // input untuk menerima masukan nama pemain dari user
 	boolean found; // found untuk skema searching dengan boolean
@@ -201,12 +203,10 @@ int main(){
 		printf("Input : ");scanf("%d",&menu);
 		switch(menu){
 			case 1:{
-				printf("--Register--\n");
-								if(First(List_Nama)==Nil){
+					if(First(List_Nama)==Nil){
 					printf("File kosong! Register terlebih dahulu!\n"); // Kasus kosong
 				}
 				else{
-					printf("--Login--\n");
 					printf("Nama : ");scanf("%s",&input);
 					/* Cek apakah nama sudah terdaftar atau belum */
 					if(Search(List_Nama,input)==Nil){
@@ -222,19 +222,17 @@ int main(){
 								printf("%s\n",Info(P).T);
 							P = Next(P);
 						}
-						do{
-							printf("\nSilakan Log out dengan memasukan karakter 'Y' : ");scanf(" %c",&YT);
-							/* Input YT sampai benar */
-							if(YT != 'Y'){
-								printf("Input Salah\n");
-							}
-						}while(YT != 'Y');
+						ToPreparationMenu = True;
 					}
 				}
 				break;
 			}
 			case 2:{
 				do{
+					printf("--------------------------------------------------------------------------\n");
+					printf("     ====================        REGISTER        ====================     \n");
+					printf("--------------------------------------------------------------------------\n");
+					printf("\n");
 					/* Input nama sampai benar */
 					do{
 						printf("Nama : ");scanf("%s",&input.T);
@@ -258,8 +256,34 @@ int main(){
 					}while((YT != 'Y')&&(YT != 'T'));
 				}while(YT == 'Y');
 			}
+
+			case 3 :
+			{
+				 printf("===============================================================\n");
+				 printf("                         o ABOUT US o                         \n");
+				 printf("                 TAK KENAL MAKA TAK SAYANG :)  \n");
+				 printf("===============================================================\n");
+				 printf("      XXXXXXXXXXXXXXXX\n");
+ 				 printf("   XXXXXXXXXXXXXXXXXXXXXX\n");
+				 printf(" XXXXXXXX          XXXXXXXX > 50 CENT\n");
+				 printf(" XXXXX                XXXXX ===================================\n");
+				 printf("  XXX     XXXXXXXX     XXX   18213001 - Fikriansyah Adzaka\n");
+				 printf("  XXX     XXX          XXX   18213002 - Nurizka Fitrianingrum\n");
+				 printf("  XXX     XXXXXXXX     XXX   18213030 - Muhammad Irfan\n");
+				 printf("  XXX          XXX     XXX  \n");
+				 printf("  XXX     XXXXXXXX     XXX   IF2111 Algoritma Struktur Data\n");
+				 printf(" XXXXX                XXXXX  STI 2013, K01\n");
+				 printf(" XXXXXXXX          XXXXXXXX ===================================\n");
+				 printf("   XXXXXXXXXXXXXXXXXXXXXX\n");
+				 printf("      XXXXXXXXXXXXXXXX\n");
+				 printf("===============================================================\n");
+				break;
+
+			}
 			case 4:{
-				printf("Selamat Tinggal!");
+					printf("--------------------------------------------------------------------------\n");
+					printf("     ====================          BYE!          ====================     \n");
+					printf("--------------------------------------------------------------------------\n");
 				FSave(List_Nama,Tab_HighScore); // Simpan Daftar_Pemain
 				abort()
 				break;
@@ -268,7 +292,37 @@ int main(){
 				printf("Masukan menu tidak valid. Ulangi!\n");
 			}
 		}
-	}while(menu != 3);
+	}while(!ToPreparationMenu);
 	
+	/** TRANSISI **/
+
+	printf("--------------------------------------------------------------------------\n");
+	printf("     ====================         LOGIN          ====================     \n");
+	printf("--------------------------------------------------------------------------\n");
+	printf("\n");
+	printf("             [1] NEW GAME [2] HIGH SCORE BOARD [3] LOG OUT\n");
+	printf("                                    ");
+
+	printf("Input : ");scanf("%d",&menu);
+
+	switch (menu)
+	{
+		case 1 :
+		{
+			ToGame = true;
+			break;
+		}
+		case 2 :
+		{
+			// HIGH SCORE
+			break;
+		}
+		case 3 :
+		{
+			// BACK?
+			break;
+		}
+	} while (!ToGame);
+
 	return 0;
 }
